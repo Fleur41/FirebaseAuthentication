@@ -5,7 +5,8 @@ plugins {
     //hilt
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
-
+//    google-services plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -46,15 +47,25 @@ android {
 
 dependencies {
 
+    //navigation
+    implementation (libs.androidx.navigation.compose)
     //hilt
-
     implementation(libs.hilt.android)
+    implementation(libs.firebase.auth.ktx)
     kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
 
     //retrofit dep
     implementation(libs.converter.moshi)
     implementation(libs.retrofit)
+
+    //FirebaseBom
+    implementation(platform(libs.firebase.bom))
+    //Firebase Authentication
+//    implementation(libs.firebase.authentication)
+    //Firebase Auth
+    implementation(libs.firebase.auth)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

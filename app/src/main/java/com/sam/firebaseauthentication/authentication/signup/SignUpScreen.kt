@@ -22,12 +22,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
     // Consider adding a ViewModel parameter for state and logic
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -71,11 +73,7 @@ fun SignUpScreen(
                 onPasswordClear = { password = "" },
                 actionButtonText = "Sign Up",
                 onActionButtonClick = {
-                    if (password == confirmPassword) {
-                        // TODO: Implement Sign Up Logic (e.g., call ViewModel)
-                    } else {
-                        // TODO: Show error to user (passwords don't match)
-                    }
+                    authViewModel.signUp(email, password)
                 },
                 // --- Explicitly enable and provide values for Confirm Password ---
                 showConfirmPasswordField = true,               // VERY IMPORTANT

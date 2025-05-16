@@ -32,7 +32,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sam.firebaseauthentication.R
+import com.sam.firebaseauthentication.authentication.signup.AuthViewModel
 import com.sam.firebaseauthentication.authentication.signup.CompanyInfo
 import com.sam.firebaseauthentication.authentication.signup.EmailAndPasswordContent
 
@@ -40,8 +42,9 @@ import com.sam.firebaseauthentication.authentication.signup.EmailAndPasswordCont
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
     // Consider adding a ViewModel parameter for state and logic
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -77,6 +80,7 @@ fun SignInScreen(
                 actionButtonText = "Sign In",
                 onActionButtonClick = {
                     // TODO: Implement Sign In Logic (e.g., call ViewModel)
+                    authViewModel.signIn(email, password)
                 }
                 // Intentionally OMITTING confirm password parameters.
                 // showConfirmPasswordField defaults to false.
