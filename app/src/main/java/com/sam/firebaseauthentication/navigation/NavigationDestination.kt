@@ -17,4 +17,11 @@ sealed interface NavigationDestination {
         override val route: String
             get() = "sign_up"
     }
+
+    data object Home: NavigationDestination {
+        override val title: String
+            get() = "Home"
+        override val route: String
+            get() = "home"
+    }
 }

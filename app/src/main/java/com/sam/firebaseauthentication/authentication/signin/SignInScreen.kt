@@ -77,7 +77,10 @@ fun SignInScreen(
                 onPasswordChange = { password = it },
                 onEmailClear = { email = "" },
                 onPasswordClear = { password = "" },
-                actionButtonText = "Sign In",
+                actionButtonContent = {
+                    Text(text = "Sign In")
+                },
+
                 onActionButtonClick = {
                     // TODO: Implement Sign In Logic (e.g., call ViewModel)
                     authViewModel.signIn(email, password)

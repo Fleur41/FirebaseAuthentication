@@ -10,10 +10,11 @@ import com.sam.firebaseauthentication.authentication.signin.SignInScreen
 import com.sam.firebaseauthentication.authentication.signup.SignUpScreen
 import com.sam.firebaseauthentication.components.slideIntoContainerAnimation
 import com.sam.firebaseauthentication.components.slideOutOfContainerAnimation
+import com.sam.firebaseauthentication.home.HomeScreen
 
 @OptIn(ExperimentalAnimationApi::class) // May be needed for NavHost/composable transitions
 @Composable
-fun FirebaseAppNavigation(modifier: Modifier = Modifier) {
+fun AppNavigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
     NavHost(
@@ -54,8 +55,26 @@ fun FirebaseAppNavigation(modifier: Modifier = Modifier) {
             SignUpScreen(
                 onBack = {
                     navController.popBackStack()
+                },
+                onSignUpSuccess = {
+                    navController.navigate(NavigationDestination.Home.route)
                 }
             )
+        }
+
+        composable(
+            route = NavigationDestination.Home.route,
+            enterTransition = {
+                slideIntoContainerAnimation()
+            },
+            exitTransition = {
+                slideOutOfContainerAnimation()
+            }
+            // For example:
+            // popEnterTransition = { slideInWithDirection(SlideDirection.Start) }, // If SignUp could pop to a deeper screen
+            // popExitTransition = { slideOutWithDirection(SlideDirection.End) }   // When SignUp is popped (e.g. back to SignIn)
+        ) {
+            HomeScreen()
         }
     }
 }

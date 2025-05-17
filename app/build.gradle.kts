@@ -66,6 +66,9 @@ dependencies {
     //Firebase Auth
     implementation(libs.firebase.auth)
 
+    //Datastore dep
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.lifecycle.runtime.ktx.v282)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

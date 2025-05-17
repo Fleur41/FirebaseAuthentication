@@ -37,8 +37,9 @@ fun EmailAndPasswordContent(
     onPasswordChange: (String) -> Unit,
     onEmailClear: () -> Unit,
     onPasswordClear: () -> Unit,
-    actionButtonText: String,
     onActionButtonClick: () -> Unit,
+    actionButtonContent: @Composable () -> Unit,
+    enableActionButton: Boolean = true,
     // --- Parameters for optional Confirm Password field ---
     showConfirmPasswordField: Boolean = false,       // Default to false
     confirmPasswordValue: String = "",               // Value for the confirm password field
@@ -86,9 +87,11 @@ fun EmailAndPasswordContent(
 
         Button(
             onClick = onActionButtonClick,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enableActionButton
         ) {
-            Text(text = actionButtonText)
+            actionButtonContent()
+//            Text(text = actionButtonText)
         }
     }
 }
