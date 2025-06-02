@@ -1,5 +1,6 @@
 package com.sam.firebaseauthentication.datastore
 
+
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -7,7 +8,7 @@ interface DatastoreRepository {
     val authenticated: Flow<Boolean>
     suspend fun saveIsAuthenticated(authenticated: Boolean)
 }
-
+//@Singleton
 class DatastoreRepositoryImpl @Inject constructor(
     private val datastoreManager: DatastoreManager
 ) : DatastoreRepository {

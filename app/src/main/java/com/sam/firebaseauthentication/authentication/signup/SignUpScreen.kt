@@ -1,11 +1,13 @@
 
 package com.sam.firebaseauthentication.authentication.signup
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -32,10 +35,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun SignUpScreen(
     onBack: () -> Unit,
-    onSignUpSuccess: () -> Unit,
+//    onSignUpSuccess: () -> Unit,
     // Consider adding a ViewModel parameter for state and logic
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") } // State for the confirm password field
@@ -44,7 +48,7 @@ fun SignUpScreen(
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             // Navigate to the home screen or perform other actions
-            onSignUpSuccess()
+//            onSignUpSuccess()
         }
     }
     Scaffold(
@@ -84,11 +88,15 @@ fun SignUpScreen(
                 onEmailClear = { email = "" },
                 onPasswordClear = { password = "" },
                 onActionButtonClick = {
+                    if (email.isEmpty() || password.isEmpty()){
+                        Toast.makeText(context, "Please enter email/password", Toast.LENGTH_SHORT).show()
+                        return@EmailAndPasswordContent
+                    }
                     authViewModel.signUp(email, password)
                 },
                 actionButtonContent = {
                     if(authState is AuthState.Loading){
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     } else {
                         Text(text = "Sign Up")
                     }
@@ -101,18 +109,12 @@ fun SignUpScreen(
                 onConfirmPasswordClear = { confirmPassword = "" }
             )
 
-//            when(authState){
-//                AuthState.Loading -> {
-//                    CircularProgressIndicator()
-//                }
-//                AuthState.Success -> {}
-//                is AuthState.Error -> {}
-//                else -> {}
 //
-//            }
 
             Box(
-                modifier = Modifier.weight(1f) // Takes available bottom space (acts as a spacer)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp) // Takes available bottom space (acts as a spacer)
             ){
                 if (authState is AuthState.Error) {
                     Text(

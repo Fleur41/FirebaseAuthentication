@@ -3,6 +3,7 @@ package com.sam.firebaseauthentication.authentication.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sam.firebaseauthentication.authentication.AuthRepository
+import com.sam.firebaseauthentication.datastore.DatastoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository,
+    private  val datastoreRepository: DatastoreRepository
 ): ViewModel() {
     private val _authState = MutableStateFlow<AuthState>(AuthState.Initial)
     val authState: StateFlow<AuthState> get() = _authState.asStateFlow()
@@ -23,11 +25,12 @@ class AuthViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO){
             _authState.value = AuthState.Loading
-            delay(5000)
-            repository.signUp(
+            delay(3000)
+            authRepository.signUp(
                 email = email,
                 password = password,
                 onSuccess = {
+                    saveIsAuthenticated(true)
                     _authState.value = AuthState.Success
                 },
                 onFailure = { exception ->
@@ -36,9 +39,28 @@ class AuthViewModel @Inject constructor(
             )
         }
     }
-    fun  signIn(email: String, password: String){
+    fun  signIn(email: String , password: String){
         viewModelScope.launch(Dispatchers.IO){
-            repository.signIn(email, password)
+            _authState.value = AuthState.Loading
+            delay(3000)
+            authRepository.signIn(
+                email = email,
+                password = password,
+                onSuccess = {
+                    saveIsAuthenticated(true)
+                    _authState.value = AuthState.Success
+                },
+                onFailure = { exception ->
+                    _authState.value = AuthState.Error(exception.message ?: "Unknown error")
+                }
+            )
+        }
+    }
+//     "sam1@gmail.com"
+//    pwd: samqwerty
+    fun saveIsAuthenticated(authenticated: Boolean){
+        viewModelScope.launch {
+            datastoreRepository.saveIsAuthenticated(authenticated)
         }
     }
 }

@@ -9,9 +9,18 @@ interface AuthRepository {
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit)
-    fun  signIn(email: String, password: String)
+        onFailure: (Exception) -> Unit
+    )
+    fun  signIn(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    )
+
+    fun signOut()
 }
+
 
 class AuthRepositoryImpl @Inject constructor(
     private  val auth: FirebaseAuth
@@ -24,7 +33,7 @@ class AuthRepositoryImpl @Inject constructor(
     ) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener{authResult ->
-                Log.d("TAG", "authResult: $auth")
+                Log.d("TAG", "authResult: $authResult")
 //                authResult.user?.sendEmailVerification()
 
                 // Handle success
@@ -37,7 +46,25 @@ class AuthRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun signIn(email: String, password: String) {
+    override fun signIn(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener { authResult ->
+                Log.d("TAG", "authResult: $authResult")
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "exception: $exception")
+                onFailure(exception)
+            }
+
+    }
+
+    override fun signOut() {
+        auth.signOut()
     }
 }
