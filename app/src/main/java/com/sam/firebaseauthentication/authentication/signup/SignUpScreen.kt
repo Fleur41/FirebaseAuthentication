@@ -27,9 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +37,7 @@ fun SignUpScreen(
     onBack: () -> Unit,
 //    onSignUpSuccess: () -> Unit,
     // Consider adding a ViewModel parameter for state and logic
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
@@ -88,15 +88,18 @@ fun SignUpScreen(
                 onEmailClear = { email = "" },
                 onPasswordClear = { password = "" },
                 onActionButtonClick = {
-                    if (email.isEmpty() || password.isEmpty()){
+                    if (email.isBlank() || password.isBlank()){
                         Toast.makeText(context, "Please enter email/password", Toast.LENGTH_SHORT).show()
                         return@EmailAndPasswordContent
                     }
-                    authViewModel.signUp(email, password)
+                    authViewModel.signUp(email.trim(), password.trim())
                 },
                 actionButtonContent = {
                     if(authState is AuthState.Loading){
-                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.White
+                        )
                     } else {
                         Text(text = "Sign Up")
                     }

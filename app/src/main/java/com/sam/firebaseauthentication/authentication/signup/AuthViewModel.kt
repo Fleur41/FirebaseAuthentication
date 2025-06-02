@@ -1,5 +1,6 @@
 package com.sam.firebaseauthentication.authentication.signup
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sam.firebaseauthentication.authentication.AuthRepository
@@ -21,6 +22,10 @@ class AuthViewModel @Inject constructor(
     private val _authState = MutableStateFlow<AuthState>(AuthState.Initial)
     val authState: StateFlow<AuthState> get() = _authState.asStateFlow()
 
+    init {
+        Log.d("TAG", "Created an instance of ${this::class.simpleName}")
+
+    }
     fun  signUp(email: String, password: String){
 
         viewModelScope.launch(Dispatchers.IO){
@@ -56,12 +61,18 @@ class AuthViewModel @Inject constructor(
             )
         }
     }
-//     "sam1@gmail.com"
-//    pwd: samqwerty
+//     "sam1@gmail.com"  "tintin@gmail.com"
+//    pwd: samqwerty  "tintin1234"
+
     fun saveIsAuthenticated(authenticated: Boolean){
         viewModelScope.launch {
             datastoreRepository.saveIsAuthenticated(authenticated)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("TAG", "Clearing an instance of ${this::class.simpleName}")
     }
 }
 

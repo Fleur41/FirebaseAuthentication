@@ -3,7 +3,9 @@ package com.sam.firebaseauthentication.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -35,8 +37,9 @@ fun AppNavigation(
             exitTransition = { slideOutOfContainerAnimation() } // This is your new function from Animations.kt
 
 
-        ) {
+        ) { backStackEntry ->
             SignInScreen(
+                authViewModel =  hiltViewModel(backStackEntry),
                 onSignUpClick = {
                     navController.navigate(NavigationDestination.SignUp.route)
                 }
@@ -50,8 +53,10 @@ fun AppNavigation(
             // For example:
             // popEnterTransition = { slideInWithDirection(SlideDirection.Start) }, // If SignUp could pop to a deeper screen
             // popExitTransition = { slideOutWithDirection(SlideDirection.End) }   // When SignUp is popped (e.g. back to SignIn)
-        ) {
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {navController.getBackStackEntry(NavigationDestination.SignIn.route)}
             SignUpScreen(
+                authViewModel = hiltViewModel(parentEntry),
                 onBack = {
                     navController.popBackStack()
                 },

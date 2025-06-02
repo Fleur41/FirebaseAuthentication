@@ -38,7 +38,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.sam.firebaseauthentication.R
 import com.sam.firebaseauthentication.authentication.signup.AuthState
 import com.sam.firebaseauthentication.authentication.signup.AuthViewModel
@@ -51,7 +50,7 @@ import com.sam.firebaseauthentication.authentication.signup.EmailAndPasswordCont
 fun SignInScreen(
     onSignUpClick: () -> Unit,
     // Consider adding a ViewModel parameter for state and logic
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
@@ -97,7 +96,10 @@ fun SignInScreen(
                     onPasswordClear = { password = "" },
                     actionButtonContent = {
                         if (authState is AuthState.Loading) {
-                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = Color.White
+                            )
                         } else {
                             Text(text = "Sign In")
                         }
@@ -105,11 +107,11 @@ fun SignInScreen(
 
                     onActionButtonClick = {
                         // TODO: Implement Sign In Logic (e.g., call ViewModel)
-                        if (email.isEmpty() || password.isEmpty()){
+                        if (email.isBlank() || password.isBlank()){
                             Toast.makeText(context, "Please enter email/password", Toast.LENGTH_SHORT).show()
                             return@EmailAndPasswordContent
                         }
-                        authViewModel.signIn(email, password)
+                        authViewModel.signIn(email.trim(), password.trim())
                     }
 
                 )
@@ -149,7 +151,7 @@ fun SignUpBox(
     ){
         Text(
             modifier = Modifier.clickable { onSignUpClick() },
-            text = "Signup instead now",
+            text = "Signup instead",
             style = MaterialTheme.typography.titleMedium,
             textDecoration = TextDecoration.Underline,
             color = Color.Blue // Or your MaterialTheme.colorScheme.primary
